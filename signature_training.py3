@@ -500,8 +500,42 @@ def core_sig_idf(sigma_set, R_cutoff, S_cutoff, X_val, y_val, validation_type, d
     plt.title('S sig genes in each fold')
     fig_S = plt.gcf()
     plt.show()
+    
+    # core R
+    R_core = list(R_set[0] & R_set[1] & R_set[2])
+    S_core = list(S_set[0] & S_set[1] & S_set[2])
+    
 
-    return
+    # score result initiation
+    cv_score = df(index=cv_sets.keys(),
+                  columns=['RS_train', 'RS_test', 'R_train',
+                           'S_train', 'R_test', 'S_test'])
+
+    for k in cv_sets.keys():
+        train_X_ = cv_sets[k]['X_train']
+        train_y_ = cv_sets[k]['y_train']
+        test_X_ = cv_sets[k]['X_test']
+        test_y_ = cv_sets[k]['y_test']
+        
+    
+        _, train_auc_ = calculate_RS_score(X=train_X_,
+                                           y=train_y_['response'].astype(int),
+                                           sig_R=R_core,
+                                           sig_S=S_core,
+                                           method=method)
+        _, test_auc_ = calculate_RS_score(X=test_X_,
+                                          y=test_y_['response'].astype(int),
+                                          sig_R=R_core,
+                                          sig_S=S_core,
+                                          method=method)
+        cv_score.at[k, 'RS_train'] = train_auc_['RS_score']
+        cv_score.at[k, 'R_train'] = train_auc_['R_score']
+        cv_score.at[k, 'S_train'] = train_auc_['S_score']
+        cv_score.at[k, 'RS_test'] = test_auc_['RS_score']
+        cv_score.at[k, 'R_test'] = test_auc_['R_score']
+        cv_score.at[k, 'S_test'] = test_auc_['S_score']
+    
+    return R_core, S_core, cv_score
 
 
 """
