@@ -2,7 +2,7 @@
 Code repository for chemoimmunotherapy synergism project
 
 ## 1. Source code
-__signature_training.py3__: Implementation of R and S signature identification procedure.
+__signature_training.py3__: Implementation of R and S signature identification procedure. \n
 __Shift_ability_calculation.py3__: Implementation of shift ability score calculation on post-treatment transcriptomes using identified R and S signatures.
 
 ## 2. Data
